@@ -21,9 +21,23 @@ module.exports = {
                 use: 'css-loader'
             },
             {
+                test: /\.(jpg|png|gif|woff|eot|ttf|svg)/,
+                use: {
+                    loader: 'url-loader', // this need file-loader
+                    options: {
+                        limit: 50000
+                    }
+                }
+            },
+            {
                 test: /\.(tsx|js|ts)$/,
                 exclude: /(node_modules)/,
                 use: 'babel-loader'
+            },
+            {
+                test: /\.(graphql|gql)$/,
+                exclude: /node_modules/,
+                loader: 'graphql-tag/loader',
             },
         ]
     },

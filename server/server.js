@@ -29,4 +29,4 @@ const resolvers = {
 };
 
 const server  = new GraphQLServer({typeDefs,resolvers})
-server.start(({port})=>console.log('server,start'))
+server.start(({port})=>console.log(`server start at port ${port}`))
