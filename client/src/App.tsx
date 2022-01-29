@@ -1,26 +1,35 @@
 import React, {useState} from 'react';
-import {ApolloClient, ApolloProvider, gql, InMemoryCache, useMutation, useQuery} from "@apollo/client";
+import {ApolloClient, ApolloProvider, gql, InMemoryCache, useMutation, useSubscription} from "@apollo/client";
 import {List} from "./component/list/List";
 import {MessageField} from "./component/messageField/messageField";
-import {IMessage} from "./types/Types";
+import {IMessage} from "./types/types";
 import {Container} from "@mui/material";
 import crock from './assest/orig-21.jpg'
+import {WebSocketLink} from "@apollo/client/link/ws";
 
+
+const link = new WebSocketLink({
+    uri: "ws://localhost:4000/",
+    options: {
+        reconnect: true,
+    },
+});
 
 const client = new ApolloClient({
+    link,
     uri: 'http://localhost:4000/',
     cache: new InMemoryCache()
 });
 
 
 const GET_MESSAGE = gql`
-    query { 
-        messages {
-        id,
+    subscription{
+        messages{
         content,
-        user
-        }
-    }
+        id,
+         user
+     }
+}
 `
 
 const ADD_MESSAGE = gql`
@@ -30,7 +39,7 @@ const ADD_MESSAGE = gql`
 `
 
 const App = () => {
-    const {data} = useQuery(GET_MESSAGE)
+    const {data} = useSubscription(GET_MESSAGE)
     const [postMessage] = useMutation(ADD_MESSAGE)
     const [message, setMessage] = useState<IMessage>({
         user: 'Andrey',
@@ -43,7 +52,10 @@ const App = () => {
     }
     if (data) {
         return (
-            <Container sx={{background: `url(${crock}) center center no-repeat`,'background-attachment': 'fixed'}} >
+            <Container sx={{
+                background: `url(${crock}) center center no-repeat`,
+                'background-attachment': 'fixed',
+            }}>
                 <List messages={data.messages}/>
                 <MessageField
                     value={message.content}

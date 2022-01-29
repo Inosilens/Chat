@@ -1,5 +1,5 @@
 import React from 'react';
-import {IMessage} from "../../types/Types";
+import {IMessage} from "../../types/types";
 import Message from "../message/Message";
 import {Grid} from "@mui/material";
 

@@ -12,7 +12,7 @@ export const MessageField = React.memo<IMessageField>(({onChange, submit, value}
     return (
         <div>
             <TextField label='Your message' minRows={10} value={value} onChange={onChange} />
-            <Button variant="contained" onClick={submit}>
+            <Button disabled={!value.length} variant="contained" onClick={submit}>
                 Отправить
             </Button>
         </div>
