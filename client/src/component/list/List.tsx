@@ -4,16 +4,21 @@ import Message from "../message/Message";
 import {Grid} from "@mui/material";
 
 interface IListProps {
-    messages: IMessage[]
+    messages: IMessage[],
+    nick: string,
 }
 
 
-export const List = React.memo<IListProps>(({messages})=> {
+export const List = React.memo<IListProps>(({messages, nick}) => {
     return (
         <Grid container direction={"column"} spacing={2}>
             {messages && (
                 messages.map(item =>
-                    <Message key={item.id} id={item.id} content={item.content} user={item.user}/>
+                    <Message nick={nick}
+                             key={item.id}
+                             id={item.id}
+                             content={item.content}
+                             user={item.user}/>
                 ))
             }
         </Grid>

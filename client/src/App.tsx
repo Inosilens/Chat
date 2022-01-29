@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ApolloClient, ApolloProvider, gql, InMemoryCache, useMutation, useSubscription} from "@apollo/client";
 import {List} from "./component/list/List";
-import {MessageField} from "./component/messageField/messageField";
 import {IMessage} from "./types/types";
 import {Container} from "@mui/material";
 import crock from './assest/orig-21.jpg'
 import {WebSocketLink} from "@apollo/client/link/ws";
+import {TextFromField} from "./component/TextFromField/TextFromField";
+import Button from "@mui/material/Button";
 
 
 const link = new WebSocketLink({
@@ -41,8 +42,10 @@ const ADD_MESSAGE = gql`
 const App = () => {
     const {data} = useSubscription(GET_MESSAGE)
     const [postMessage] = useMutation(ADD_MESSAGE)
+    const [nickName, setNickName] = useState<string>('')
+    const [login, setLogin] = useState<boolean>(false)
     const [message, setMessage] = useState<IMessage>({
-        user: 'Andrey',
+        user: nickName,
         content: ''
     })
     const onSubmit = () => {
@@ -50,27 +53,62 @@ const App = () => {
             setMessage({...message, content: ''})
         })
     }
-    if (data) {
-        return (
-            <Container sx={{
-                background: `url(${crock}) center center no-repeat`,
-                'background-attachment': 'fixed',
-            }}>
-                <List messages={data.messages}/>
-                <MessageField
-                    value={message.content}
-                    onChange={(e) => setMessage({...message, content: e.target.value})}
-                    submit={onSubmit}/>
-            </Container>
-        );
-    } else {
-        return (
-            <div>
-                Пустота
-            </div>
-        )
+    const auth = () => {
+        localStorage.setItem('nickname', nickName)
+        setLogin(true)
+    }
+    const logout = () => {
+        localStorage.removeItem('nickname')
+        setLogin(false)
     }
 
+    useEffect(() => {
+        let userName = localStorage.getItem('nickname')
+        if (userName) {
+            setLogin(true)
+            setNickName(userName)
+        } else {
+            setLogin(false)
+        }
+    }, [login])
+
+
+    return (
+        <>
+            {data && login && (
+                <>
+                    <Button onClick={logout}>Logout</Button>
+                    <Container sx={{
+                        maxHeight: window.outerHeight,
+                        background: `url(${crock}) center center no-repeat`,
+                        backgroundAttachment: 'fixed',
+                    }}>
+                        <List
+                            nick={nickName}
+                            messages={data.messages}/>
+                        <TextFromField
+                            label={'Enter message'}
+                            value={message.content}
+                            onChange={(e) => setMessage({...message, content: e.target.value})}
+                            submit={onSubmit}/>
+                    </Container>
+                </>
+            )}
+            {!login && (
+                <Container sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+                    <TextFromField
+                        label={'Your name'}
+                        value={nickName}
+                        onChange={(e) => setNickName(e.target.value)}
+                        submit={auth}/>
+                </Container>
+            )}
+        </>
+    );
 };
 
 export default () => (
