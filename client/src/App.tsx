@@ -1,15 +1,18 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
 
 interface IProps {
-    id : number,
+    id: number,
     name: string
 }
 
 
-export const App : FC = ({}:IProps) => {
+export const App: FC = ({}: IProps) => {
+    useEffect(() => {
+
+    }, [])
     return (
         <div>
-        NOW WORK
+            NOW WORK
         </div>
     );
 };
