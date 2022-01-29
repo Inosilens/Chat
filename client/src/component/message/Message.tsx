@@ -8,7 +8,7 @@ interface IMessageProps extends IMessage {
 
 const Message: FC<IMessageProps> = ({content, user, nick}) => {
     return (
-        <Grid alignSelf={user === nick ? 'end' : 'start'} item
+        <Grid alignSelf={ user === nick ? 'end' : 'start'} item
               sx={{color: user === nick ? 'primary.main' : 'secondary.main'}}>
             {user} :
             <Container sx={

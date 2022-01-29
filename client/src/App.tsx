@@ -28,7 +28,7 @@ const GET_MESSAGE = gql`
         messages{
         content,
         id,
-         user
+        user
      }
 }
 `
@@ -48,10 +48,13 @@ const App = () => {
         user: nickName,
         content: ''
     })
-    const onSubmit = () => {
+    const onSubmit = (e:React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
         postMessage({variables: message}).then(() => {
             setMessage({...message, content: ''})
+            window.scrollBy(0, document.documentElement.clientHeight)
         })
+
     }
     const auth = () => {
         localStorage.setItem('nickname', nickName)
@@ -79,7 +82,6 @@ const App = () => {
                 <>
                     <Button onClick={logout}>Logout</Button>
                     <Container sx={{
-                        maxHeight: window.outerHeight,
                         background: `url(${crock}) center center no-repeat`,
                         backgroundAttachment: 'fixed',
                     }}>
@@ -89,7 +91,7 @@ const App = () => {
                         <TextFromField
                             label={'Enter message'}
                             value={message.content}
-                            onChange={(e) => setMessage({...message, content: e.target.value})}
+                            onChange={(e) => setMessage({ user : nickName , content: e.target.value})}
                             submit={onSubmit}/>
                     </Container>
                 </>
@@ -98,7 +100,7 @@ const App = () => {
                 <Container sx={{
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
                 }}>
                     <TextFromField
                         label={'Your name'}

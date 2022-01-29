@@ -7,14 +7,14 @@ interface IMessageField {
     submit: (e: React.MouseEvent<HTMLButtonElement>) => void,
     value: string,
     label:string,
-    nick?: string
 }
 
-export const TextFromField = React.memo<IMessageField>(({onChange, submit, value,label,nick}) => {
+export const TextFromField = React.memo<IMessageField>(({onChange, submit, value,label}) => {
     return (
         <Container sx={{
             display:'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            marginTop:10
         }}>
             <TextField label={label} minRows={10} value={value} onChange={onChange} />
             <Button disabled={!value.length} variant="contained" onClick={submit}>
